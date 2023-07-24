@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://c33cvotqi0gx2"]
+
+[node name="Transition" type="StaticBody2D"]
+collision_layer = 2
+collision_mask = 7
+
+[node name="Art" type="Sprite2D" parent="."]
+scale = Vector2(0.2, 0.2)

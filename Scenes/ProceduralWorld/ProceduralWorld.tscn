@@ -1,15 +1,20 @@
-[gd_scene load_steps=5 format=3 uid="uid://dnf87ncy0o1vb"]
+[gd_scene load_steps=9 format=3 uid="uid://dnf87ncy0o1vb"]
 
 [ext_resource type="Texture2D" uid="uid://ca7w6rwinjwok" path="res://icon.svg" id="1_2au5h"]
 [ext_resource type="Script" path="res://Scripts/Bikes/Controller.cs" id="2_x866h"]
 [ext_resource type="PackedScene" uid="uid://c1gksiayco23p" path="res://Scenes/Bikes/Default/Wheel.tscn" id="3_f8u4n"]
+[ext_resource type="PackedScene" uid="uid://bbvt24pn0ccef" path="res://Scenes/Levels/Transitions/H>Trans>L.tscn" id="4_fcgdy"]
+[ext_resource type="PackedScene" uid="uid://bbjcebgkgquuk" path="res://Scenes/Levels/Transitions/L>Trans>M.tscn" id="5_4jxrh"]
+[ext_resource type="PackedScene" uid="uid://btyluixtvm2cs" path="res://Scenes/Levels/Transitions/M>Trans>L.tscn" id="6_cmv51"]
+[ext_resource type="PackedScene" uid="uid://cbqyro1op2fmt" path="res://Scenes/Levels/Transitions/L>Trans>H.tscn" id="7_ctbgn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4m4tu"]
-size = Vector2(131, 41.75)
+size = Vector2(131, 26.875)
 
 [node name="ProceduralWorld" type="Node2D"]
 
 [node name="Ground" type="StaticBody2D" parent="."]
+visible = false
 position = Vector2(1702, 51.0001)
 rotation = -0.279007
 scale = Vector2(4.37, 3.78)
@@ -25,14 +30,17 @@ position = Vector2(-141.488, 131.603)
 rotation = 0.341935
 scale = Vector2(22.09, 1.89178)
 polygon = PackedVector2Array(-10.4354, -16.0435, -2.2597, -17.6198, 2.89496, -17.817, 5.02478, -18.6271, 6.77828, -27.1198, 7.86203, -44.1668, 8.78664, -76.814, 9.83195, -154.396, 10.1711, -222.655, 9.32233, -296.989, 8.51838, -333.41, 7.99766, -353.937, 7.56009, -364.598, 7.02103, -377.304, 6.71551, -381.093, 6.29352, -383.746, 5.84833, -384.184, 5.472, -382.705, 5.20759, -380.427, 4.99223, -376.09, 4.82827, -369.417, 5.00351, -361.175, 5.15308, -353.479, 5.59541, -341.024, 5.80336, -309.171, 5.59602, -283.168, 3.54077, -252.907, 3.43007, -220.768, 3.28147, -191.102, 2.96601, -169.407, 2.29761, -150.331, 1.65606, -145.54, 0.304897, -149.146, -0.518296, -172.243, -0.839941, -222.388, -0.356493, -294.353, 0.145482, -343.24, 1.232, -393.349, 2.70162, -430.124, 4.29228, -445.88, 7.35516, -437.01, 10.6225, -403.136, 13.3116, -303.48, 11.2193, -60.9551, 10.2917, 12.6464, -18.2473, 12.1901, -18.3, -10.201)
+disabled = true
 
 [node name="Bike" type="RigidBody2D" parent="." node_paths=PackedStringArray("_wheels", "_floorCast")]
-position = Vector2(432, 319)
-collision_mask = 7
-mass = 50.0
+position = Vector2(-227, -265)
+rotation = 0.260697
+collision_mask = 6
+mass = 30.0
+custom_integrator = true
 continuous_cd = 2
 script = ExtResource("2_x866h")
-_wheels = [NodePath("WheelHolder1/Wheel"), NodePath("WheelHolder2/Wheel")]
+_wheels = [NodePath("Wheelholder1/Wheel"), NodePath("Wheelholder2/Wheel2")]
 _floorCast = NodePath("FloorCast")
 
 [node name="Sprite2D" type="Sprite2D" parent="Bike"]
@@ -40,33 +48,46 @@ scale = Vector2(0.5, 0.176)
 texture = ExtResource("1_2au5h")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Bike"]
-position = Vector2(-0.75, 0)
+position = Vector2(-1, -1)
 scale = Vector2(0.5, 0.5)
 shape = SubResource("RectangleShape2D_4m4tu")
-
-[node name="WheelHolder1" type="PinJoint2D" parent="Bike"]
-position = Vector2(-31, 13)
-node_a = NodePath("..")
-node_b = NodePath("Wheel")
-bias = 0.5
-softness = 0.1
-
-[node name="Wheel" parent="Bike/WheelHolder1" instance=ExtResource("3_f8u4n")]
-
-[node name="WheelHolder2" type="PinJoint2D" parent="Bike"]
-position = Vector2(28, 13)
-rotation = -0.00557525
-node_a = NodePath("..")
-node_b = NodePath("Wheel")
-bias = 0.5
-softness = 0.1
-
-[node name="Wheel" parent="Bike/WheelHolder2" instance=ExtResource("3_f8u4n")]
 
 [node name="Camera2D" type="Camera2D" parent="Bike"]
 
 [node name="FloorCast" type="RayCast2D" parent="Bike"]
 collision_mask = 2
 
-[editable path="Bike/WheelHolder1/Wheel"]
-[editable path="Bike/WheelHolder2/Wheel"]
+[node name="Wheelholder1" type="PinJoint2D" parent="Bike"]
+position = Vector2(-29, 10)
+node_a = NodePath("..")
+node_b = NodePath("Wheel")
+bias = 0.5
+
+[node name="Wheel" parent="Bike/Wheelholder1" instance=ExtResource("3_f8u4n")]
+collision_layer = 1
+freeze_mode = 1
+
+[node name="Wheelholder2" type="PinJoint2D" parent="Bike"]
+position = Vector2(30, 11)
+node_a = NodePath("..")
+node_b = NodePath("Wheel2")
+bias = 0.5
+
+[node name="Wheel2" parent="Bike/Wheelholder2" instance=ExtResource("3_f8u4n")]
+rotation = -0.00557525
+collision_layer = 1
+freeze_mode = 1
+
+[node name="H>Trans>L" parent="." instance=ExtResource("4_fcgdy")]
+
+[node name="L>Trans>M" parent="." instance=ExtResource("5_4jxrh")]
+position = Vector2(679, 0)
+
+[node name="M>Trans>L" parent="." instance=ExtResource("6_cmv51")]
+position = Vector2(1359, 0)
+
+[node name="L>Trans>H" parent="." instance=ExtResource("7_ctbgn")]
+position = Vector2(2036, 0)
+
+[editable path="Bike/Wheelholder1/Wheel"]
+[editable path="Bike/Wheelholder2/Wheel2"]
