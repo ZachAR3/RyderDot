@@ -12,7 +12,7 @@ config_version=5
 
 config/name="RyderDot"
 run/main_scene="res://Scenes/ProceduralWorld/ProceduralWorld.tscn"
-config/features=PackedStringArray("4.1", "C#", "Mobile")
+config/features=PackedStringArray("4.1", "Mobile")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -21,7 +21,7 @@ Globals="*res://Scripts/Globals.cs"
 
 [dotnet]
 
-project/assembly_name="RyderG"
+project/assembly_name="RyderDot"
 
 [input]
 
