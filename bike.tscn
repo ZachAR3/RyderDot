@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://brht1l0ioi4v2"]
+
+[ext_resource type="Script" path="res://Scripts/Bikes/Controller.cs" id="1_7p2sb"]
+[ext_resource type="Texture2D" uid="uid://ca7w6rwinjwok" path="res://icon.svg" id="2_u4qss"]
+[ext_resource type="PackedScene" uid="uid://c1gksiayco23p" path="res://Scenes/Bikes/Default/Wheel.tscn" id="3_dsnld"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4m4tu"]
+size = Vector2(131, 26.875)
+
+[node name="Bike" type="CharacterBody2D" node_paths=PackedStringArray("_wheels", "_floorCast", "_wheel1Holder", "_wheel2Holder")]
+position = Vector2(247, -392)
+rotation = 0.260697
+collision_mask = 6
+script = ExtResource("1_7p2sb")
+_wheels = [NodePath("Wheel3"), NodePath("Wheel4")]
+_floorCast = NodePath("FloorCast")
+_wheel1Holder = NodePath("Wheel")
+_wheel2Holder = NodePath("Wheel2")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.176)
+texture = ExtResource("2_u4qss")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, -1)
+scale = Vector2(0.5, 0.5)
+shape = SubResource("RectangleShape2D_4m4tu")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="FloorCast" type="RayCast2D" parent="."]
+collision_mask = 2
+
+[node name="Wheel3" parent="." node_paths=PackedStringArray("_wheelMarker") instance=ExtResource("3_dsnld")]
+position = Vector2(-27.7623, 8.4411)
+_wheelMarker = NodePath("../Wheel")
+
+[node name="Wheel" type="Marker2D" parent="."]
+position = Vector2(-27.7624, 8.4411)
+
+[node name="Wheel4" parent="." node_paths=PackedStringArray("_wheelMarker") instance=ExtResource("3_dsnld")]
+position = Vector2(27.8286, 11.2057)
+_wheelMarker = NodePath("../Wheel2")
+
+[node name="Wheel2" type="Marker2D" parent="."]
+position = Vector2(27.8286, 11.2057)
+
+[editable path="Wheel3"]
+[editable path="Wheel4"]

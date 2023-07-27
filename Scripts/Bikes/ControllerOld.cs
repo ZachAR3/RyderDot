@@ -4,20 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Godot.Collections;
 
-public partial class Controller : CharacterBody2D
+public partial class ControllerOld : RigidBody2D
 {
 	[ExportGroup("Stats")]
 	[Export] private float _maxSpeed = 25;
 	[Export] private float _acceleration = 10;
 	[Export] private float _breakingForce = 10;
 	[Export] private float _reverseMaxSpeed = -50;
-	[Export] private float _gravity = 980f;
 
 	[ExportGroup("Components")]
 	[Export] private Array<RigidBody2D> _wheels;
 	[Export] private RayCast2D _floorCast;
-	[Export] private Marker2D _wheel1Holder;
-	[Export] private Marker2D _wheel2Holder;
 
 	private float _speed;
 	private bool _applyDownforce;
@@ -57,28 +54,23 @@ public partial class Controller : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		var gravity = _floorCast.IsColliding() && _applyDownforce
-			? GlobalPosition.DirectionTo(_floorCast.GetCollisionPoint()).Normalized() * _gravity
-			: Vector2.Down * _gravity;
-
-		if (!_wheels.Any(wheel => wheel.GetContactCount() > 0))
-		{
-			Velocity += gravity * (float)delta;
-		}
-		else
-		{
-			GD.Print("yoyo");
-			// Multiplies it by 0 to remove the Y component of the gravity while keeping horizontal velocity
-			Velocity *= new Vector2(1, 0);
-		}
-
 		foreach (var wheel in _wheels)
 		{
 			wheel.AngularVelocity = _speed;
 		}
-
-		MoveAndSlide();
 	}
 	
+	
+	public override void _IntegrateForces(PhysicsDirectBodyState2D state)
+	{
+		// Custom gravity for wall / ceiling riding by shifting the direction towards it's normal
+		var dt = state.Step;
+		var gravity = _floorCast.IsColliding() && _applyDownforce
+			? GlobalPosition.DirectionTo(_floorCast.GetCollisionPoint()).Normalized() * state.TotalGravity.Length()
+			: state.TotalGravity;
+		var velocity = state.LinearVelocity + gravity * dt;
+
+		state.LinearVelocity = velocity;
+	}
 
 }
